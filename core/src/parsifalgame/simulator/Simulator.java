@@ -480,19 +480,12 @@ public class Simulator {
 
 		GameState state = latestState;
 		String filename = "state" + state.currentRound + ".json";
-		//writeFile(filename, json.prettyPrint(state));
 
 		Json json = new Json();
 
 		JsonValue.PrettyPrintSettings settings = new JsonValue.PrettyPrintSettings();
 		settings.outputType = JsonWriter.OutputType.json;
 
-		System.out.println(json.prettyPrint(state, settings));
+		ServerManager.writeFile(filename, json.prettyPrint(latestState, settings));
 	}
-
-	private void writeFile(String filename, String text) {
-
-	}
-
-
 }

@@ -2,10 +2,7 @@ package parsifalgame;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
-import com.badlogic.gdx.utils.IntArray;
-import com.badlogic.gdx.utils.IntMap;
-import com.badlogic.gdx.utils.ObjectMap;
-import com.badlogic.gdx.utils.TimeUtils;
+import com.badlogic.gdx.utils.*;
 import parsifalgame.net.Message;
 import parsifalgame.net.Message.Incoming;
 import parsifalgame.net.Message.Outgoing;
@@ -22,7 +19,7 @@ public class ServerManager extends GameManager {
 
     private ServerScreen serverScreen;
 
-    private String outdir;
+    private static String outdir;
     private boolean canWriteFiles = false;
 
     private boolean gameStarted = false;
@@ -214,8 +211,11 @@ public class ServerManager extends GameManager {
     private void broadcastGameState(GameState state) {
 
         String filename = "state" + state.currentRound + ".json";
-        //writeFile(filename, json.prettyPrint(state));
-        writeFile(filename, json.toJson(state));
+
+        JsonValue.PrettyPrintSettings settings = new JsonValue.PrettyPrintSettings();
+        settings.outputType = JsonWriter.OutputType.json;
+
+        writeFile(filename, json.prettyPrint(state, settings));
         print("Round written to file (" + filename + ").");
 
         Outgoing stateMessage = Message.makeOutgoingState(state, json);
@@ -295,14 +295,14 @@ public class ServerManager extends GameManager {
                 GameState newState = simulator.simulate(allPeerChoices);
 
                 for (int i = 0; i < GameManager.facilitatorCount; ++i) {
-                    String filenamepp =
-                        "team" + allPeerChoices[i].groupID + "_round" + newState.currentRound
-                            + ".pp.json";
                     String filename =
                         "team" + allPeerChoices[i].groupID + "_round" + newState.currentRound
                             + ".json";
-                    writeFile(filenamepp, json.prettyPrint(allPeerChoices[i]));
-                    //writeFile(filename, json.p));
+
+                    JsonValue.PrettyPrintSettings settings = new JsonValue.PrettyPrintSettings();
+                    settings.outputType = JsonWriter.OutputType.json;
+
+                    writeFile(filename, json.prettyPrint(allPeerChoices[i], settings));
                 }
 
                 // create a new array, because we store the previous choices in
@@ -327,7 +327,7 @@ public class ServerManager extends GameManager {
         resend = false;
     }
 
-    private void writeFile(String filename, String text) {
+    public static void writeFile(String filename, String text) {
         FileHandle outFile = Gdx.files.local(outdir + filename);
         outFile.writeString(text, false);
     }
