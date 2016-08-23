@@ -25,10 +25,10 @@ public class ClientConnectScreen extends BasicScreen {
 
 	// interactive elements
 	private Label roleLabel = new Label("", skin, "large");
-//	private TextField addressField = new TextField("localhost", skin);
-	private TextField addressField = new TextField("10.0.1.123", skin);
+	private TextField addressField = new TextField("localhost", skin);
+//	private TextField addressField = new TextField("10.0.1.123", skin);
 //	private TextField addressField = new TextField("192.168.1.26", skin);
-	//private TextField addressField = new TextField("127.0.0.1", skin);
+//  private TextField addressField = new TextField("127.0.0.1", skin);
 	private TextField portField = new TextField(
 			Integer.toString(ServerManager.initialPort), skin);
 	private TextField statusField = new TextField("", skin);

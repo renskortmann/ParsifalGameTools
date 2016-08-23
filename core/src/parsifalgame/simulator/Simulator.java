@@ -5,6 +5,8 @@ import java.util.Iterator;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.utils.*;
+
+import parsifalgame.ServerManager;
 import parsifalgame.state.GameState;
 import parsifalgame.state.RoundChoices;
 
@@ -485,7 +487,7 @@ public class Simulator {
 
 		JsonValue.PrettyPrintSettings settings = new JsonValue.PrettyPrintSettings();
 		settings.outputType = JsonWriter.OutputType.json;
-
+		
 		ServerManager.writeFile(filename, json.prettyPrint(latestState, settings));
 	}
 }
