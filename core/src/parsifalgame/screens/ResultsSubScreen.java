@@ -287,20 +287,30 @@ public class ResultsSubScreen extends SubScreen {
 			if (info.attacker == teamID)
 				myAttack = info;
 			
-			if (info.result == 1){
+			if (info.result == GameState.ATTACK_RESULT_SUCCESS){
 				if (info.attacker == teamID)
 					return "Geslaagd";
 				else
 					return "Mislukt ("+GameManager.roleNames.get(info.attacker)+" heeft de buit)";
 			}
 		}
-		boolean zwaardenFailed = myAttack.zwaarden > 0 && lastState.numShieldsAfterAttack.get(defenderID, 0) > 0;
-		boolean rakettenFailed = myAttack.raketten > 0 && lastState.numRocketShieldsAfterAttack.get(defenderID, 0) > 0;
-		boolean virussenFailed = myAttack.virussen > 0 && lastState.numAntiVirusesAfterAttack.get(defenderID, 0) > 0;
-		if (zwaardenFailed && rakettenFailed && virussenFailed)
-			return "Mislukt (verdediging was sterker)";
+		
+//		boolean zwaardenFailed = myAttack.zwaarden > 0 && lastState.numShieldsAfterAttack.get(defenderID, 0) > 0;
+//		boolean rakettenFailed = myAttack.raketten > 0 && lastState.numRocketShieldsAfterAttack.get(defenderID, 0) > 0;
+//		boolean virussenFailed = myAttack.virussen > 0 && lastState.numAntiVirusesAfterAttack.get(defenderID, 0) > 0;
+//		
+//		if (zwaardenFailed && rakettenFailed && virussenFailed)
+
+		if(myAttack != null) {
+			if (myAttack.result == GameState.ATTACK_RESULT_FAIL)
+				return "Mislukt (verdediging was sterker)";
+			else if (myAttack.result == GameState.ATTACK_RESULT_DRAW)
+				return "Verdampt";
+			else
+				return "ResultSubScreen.java: getOwnAttackResult(): attack result does not equal Fail or Draw.";
+		}
 		else
-			return "Verdampt";
+			return "ResultSubScreen.java: getOwnAttackResult(): no attack found.";
 	}
 	
 	@Override

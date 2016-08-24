@@ -444,7 +444,14 @@ public class ChoicesSubScreen extends SubScreen {
 			totaleKosten += kostenPatentVirus;
 		if (antivirusPatent.isChecked())
 			totaleKosten += kostenPatentAntivirus;
-
+		
+		if (highTechAsiaBox.getSelected() > 0)
+			totaleKosten += highTechAsiaBox.getSelected();
+		if (countryInvestmentTrustBox.getSelected() > 0)
+			totaleKosten += countryInvestmentTrustBox.getSelected();
+		if (ecoScienceBox.getSelected() > 0)
+			totaleKosten += ecoScienceBox.getSelected();
+		
 		totaleKostenLabel.setText("Totale kosten: " + totaleKosten);
 		
 		storeChoices();

@@ -22,7 +22,7 @@ public class GameState {
 	public static final Integer PATENT_VIRUS = 8;
 	public static final Integer PATENT_ANTIVIRUS = 9;
 	public static final Integer BOUWSTEEN = 10;
-
+	
 	public static final Integer INIT_PRICE_ZWAARD = 1;
 	public static final Integer INIT_PRICE_RAKET = 2;
 	public static final Integer INIT_PRICE_VIRUS = 3;
@@ -98,6 +98,10 @@ public class GameState {
 	public static final int NUM_ROCKETS_FIELD = 3;
 	public static final int NUM_VIRUSES_FIELD = 4;
 	public static final int RESULT_FIELD = 5;
+	
+	public static final Integer ATTACK_RESULT_SUCCESS = 1;
+	public static final Integer ATTACK_RESULT_FAIL = 2;
+	public static final Integer ATTACK_RESULT_DRAW = 3;
 	
 	public IntMap<Boolean> hacks = new IntMap<Boolean>();
 
@@ -214,7 +218,7 @@ public class GameState {
 				attacks[attackerID][numAttack].put(NUM_SWORDS_FIELD, choicesFromGroups[attackerID].attackNumberZwaard[numAttack]);
 				attacks[attackerID][numAttack].put(NUM_ROCKETS_FIELD, choicesFromGroups[attackerID].attackNumberRaket[numAttack]);
 				attacks[attackerID][numAttack].put(NUM_VIRUSES_FIELD, choicesFromGroups[attackerID].attackNumberVirus[numAttack]);
-				attacks[attackerID][numAttack].put(RESULT_FIELD, 0);  // attack fails by default 
+				attacks[attackerID][numAttack].put(RESULT_FIELD, ATTACK_RESULT_FAIL);  // attack fails by default 
 			}
 		}
 	}

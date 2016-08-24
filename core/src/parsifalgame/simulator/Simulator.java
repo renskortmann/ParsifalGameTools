@@ -33,10 +33,10 @@ public class Simulator {
 
 	private static final int NUM_RESOURCES_PER_ZWAARD = 2;
 	private static final int NUM_RESOURCES_PER_RAKET = 4;
-	private static final int NUM_RESOURCES_PER_VIRUS = 6;
+	private static final int NUM_RESOURCES_PER_VIRUS = 8;
 	private static final int NUM_RESOURCES_PER_SCHILD = 2;
 	private static final int NUM_RESOURCES_PER_RAKETSCHILD = 4;
-	private static final int NUM_RESOURCES_PER_ANTIVIRUS = 6;
+	private static final int NUM_RESOURCES_PER_ANTIVIRUS = 8;
 	private static final int NUM_RESOURCES_PER_BOUWSTEEN = 1;
 
 	public static final int INIT_RESOURCES = 400;
@@ -62,55 +62,57 @@ public class Simulator {
 		}
 	}
 	
-	private int determineWinner(Array<Attacker> attackers) {
-		Array<Integer> winners = new Array<Integer>();
+	private Array<Attacker> determineWinners(Array<Attacker> attackers) {
+		Array<Attacker> potentialWinners = attackers;
+		Array<Attacker> winners = new Array<Attacker>();
 		
 		// check for attacker that used most virus
 		int maxNumVirusUsed = 0;
-		for (int i = 0; i < attackers.size; i++) {
-			if(attackers.get(i).numVirussen > maxNumVirusUsed) {
-				maxNumVirusUsed = attackers.get(i).numVirussen; 
-				winners = new Array<Integer>();
-				winners.add(attackers.get(i).attackerID);
+		for (int i = 0; i < potentialWinners.size; i++) {
+			if(potentialWinners.get(i).numVirussen > maxNumVirusUsed) {
+				maxNumVirusUsed = potentialWinners.get(i).numVirussen; 
+				winners = new Array<Attacker>();
+				winners.add(potentialWinners.get(i));
 			}
-			else if ((maxNumVirusUsed > 0) && (attackers.get(i).numVirussen == maxNumVirusUsed))
-				winners.add(attackers.get(i).attackerID);				
+			else if ((maxNumVirusUsed > 0) && (potentialWinners.get(i).numVirussen == maxNumVirusUsed))
+				winners.add(potentialWinners.get(i));				
 		}
 		
 		if(winners.size == 1)
-			return winners.first().intValue();
+			return winners;
+		else if (winners.size > 1)
+			potentialWinners = winners;
 		
 		// check for attacker that used most raket
 		int maxNumRaketUsed = 0;
-		for (int i = 0; i < attackers.size; i++) {
-			if(attackers.get(i).numRaketten > maxNumRaketUsed) {
-				maxNumRaketUsed = attackers.get(i).numRaketten; 
-				winners = new Array<Integer>();
-				winners.add(attackers.get(i).attackerID);
+		for (int i = 0; i < potentialWinners.size; i++) {
+			if(potentialWinners.get(i).numRaketten > maxNumRaketUsed) {
+				maxNumRaketUsed = potentialWinners.get(i).numRaketten; 
+				winners = new Array<Attacker>();
+				winners.add(potentialWinners.get(i));
 			}
-			else if ((maxNumRaketUsed > 0) && (attackers.get(i).numRaketten == maxNumRaketUsed))
-				winners.add(attackers.get(i).attackerID);				
+			else if ((maxNumRaketUsed > 0) && (potentialWinners.get(i).numRaketten == maxNumRaketUsed))
+				winners.add(potentialWinners.get(i));				
 		}
 		
 		if(winners.size == 1)
-			return winners.first().intValue();
+			return winners;
+		else if (winners.size > 1)
+			potentialWinners = winners;
 		
 		// check for attacker that used most zwaard
 		int maxNumZwaardUsed = 0;
-		for (int i = 0; i < attackers.size; i++) {
-			if(attackers.get(i).numZwaarden > maxNumZwaardUsed) {
-				maxNumZwaardUsed = attackers.get(i).numZwaarden; 
-				winners = new Array<Integer>();
-				winners.add(attackers.get(i).attackerID);
+		for (int i = 0; i < potentialWinners.size; i++) {
+			if(potentialWinners.get(i).numZwaarden > maxNumZwaardUsed) {
+				maxNumZwaardUsed = potentialWinners.get(i).numZwaarden; 
+				winners = new Array<Attacker>();
+				winners.add(potentialWinners.get(i));
 			}
-			else if ((maxNumZwaardUsed > 0) && (attackers.get(i).numZwaarden == maxNumZwaardUsed))
-				winners.add(attackers.get(i).attackerID);				
+			else if ((maxNumZwaardUsed > 0) && (potentialWinners.get(i).numZwaarden == maxNumZwaardUsed))
+				winners.add(potentialWinners.get(i));				
 		}
 		
-		if(winners.size == 1)
-			return winners.first().intValue();		
-		else
-			return -1;
+		return winners;		
 	}
 	
 	
@@ -210,7 +212,7 @@ public class Simulator {
 
 			// iterate over all teams to find attackers
 			for(int attackerID = 0; attackerID < numTeams; attackerID++) {
-				for(int attack = 0; attack < 2; attack++)
+				for(int attack = 0; attack < RoundChoices.NUM_ATTACKS_PER_TEAM; attack++)
 					if((attackerID != defenderID) && (choicesFromGroups[attackerID].attackOnTeam[attack] == defenderID)) {
 
 					// team attackerID attacks team defenderID
@@ -237,7 +239,7 @@ public class Simulator {
 					attackSuccessful = true;
 					numAntivirussen = 0;
 					
-					// Rocket shields and shields cannot defend vs viruses, but viruses cannot harm them either?
+					// Rocket shields and shields cannot defend vs viruses, but viruses cannot harm them either
 					numRaketschilden -= Math.min(numRaketschilden, numRaketten);
 					numSchilden -= Math.min(numSchilden, numZwaarden);
 				} 
@@ -277,7 +279,7 @@ public class Simulator {
 							// remaining swords destroy rocket shields
 							int decreaseRaketschilden = Math.min(numRaketschilden, numZwaarden / NUM_ZWAARD_BEATS_RAKETSCHILD);
 							numRaketschilden -= decreaseRaketschilden;
-							numZwaarden -= decreaseAntivirussen * NUM_ZWAARD_BEATS_RAKETSCHILD;
+							numZwaarden -= decreaseRaketschilden * NUM_ZWAARD_BEATS_RAKETSCHILD;
 							
 							// remaining swords destroy shields
 							numSchilden -= Math.min(numSchilden, numZwaarden);
@@ -298,14 +300,26 @@ public class Simulator {
 				// if defender was defeated, determine which attacking team conquered  
 				// the building blocks in the transport of the defending team
 				if(attackSuccessful) {
-					int winner = determineWinner(attackers);
-					if(winner != -1) { // there is only one winner
+					Array<Attacker> winners = determineWinners(attackers);
+					if(winners.size == 1) { // there is only one winner
+						int winner = winners.get(0).attackerID;
 						int conquered = nextState.conqueredBouwstenen.get(winner, 0);
 						nextState.conqueredBouwstenen.put(winner, conquered + choicesFromGroups[defenderID].purchaseBouwstenen);
 						for(int numAttack = 0; numAttack < RoundChoices.NUM_ATTACKS_PER_TEAM; numAttack++)
 							if(nextState.attacks[winner][numAttack].get(GameState.DEFENDER_ID_FIELD, -1) == defenderID)
-								nextState.attacks[winner][numAttack].put(GameState.RESULT_FIELD, 1);
+								nextState.attacks[winner][numAttack].put(GameState.RESULT_FIELD, GameState.ATTACK_RESULT_SUCCESS);
 					}
+					else if (winners.size > 1) { // there are multiple winners / draw: loot evaporates
+						for (Attacker aWinner : winners) {
+							int winner = aWinner.attackerID;
+							for(int numAttack = 0; numAttack < RoundChoices.NUM_ATTACKS_PER_TEAM; numAttack++)
+								if(nextState.attacks[winner][numAttack].get(GameState.DEFENDER_ID_FIELD, -1) == defenderID)
+									nextState.attacks[winner][numAttack].put(GameState.RESULT_FIELD, GameState.ATTACK_RESULT_DRAW);
+						}
+					}
+					else
+						System.out.println("simulate(): determineWinner() yielded no winners.");
+						
 					int purchase = choicesFromGroups[defenderID].purchaseBouwstenen;
 					if(purchase > 0)
 						nextState.lostBouwstenen.put(defenderID, purchase);
