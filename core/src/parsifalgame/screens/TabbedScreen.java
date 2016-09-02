@@ -79,7 +79,7 @@ public abstract class TabbedScreen extends BasicScreen {
 
 		infoBar.add(teamLabel).expandX().fillX();
 		
-		if (this instanceof ObserverScreen)
+		if (this instanceof UmpireScreen)
 			addWaitingLights(infoBar);
 		infoBar.add(roundLabel); // .padLeft(5);
 		// infoBar.add(timeLabel).padLeft(25);
@@ -132,13 +132,16 @@ public abstract class TabbedScreen extends BasicScreen {
 
 	public void updateGameState(int roleIndex, GameState newState) {
 
-		initWaitingForTeams(newState.numTeams);
-		
-		LabelStyle coloredStyle = new LabelStyle(teamLabel.getStyle());
-		coloredStyle.fontColor = GameManager.roleColors.get(roleIndex);
-		teamLabel.setStyle(coloredStyle);
-		teamLabel.setText(GameManager.roleNames.get(roleIndex));
-		
-		roundLabel.setText("Ronde " + (newState.currentRound + 1));
+			initWaitingForTeams(newState.numTeams);
+
+			LabelStyle coloredStyle = new LabelStyle(teamLabel.getStyle());
+			coloredStyle.fontColor = GameManager.roleColors.get(roleIndex);
+			teamLabel.setStyle(coloredStyle);
+			teamLabel.setText(GameManager.roleNames.get(roleIndex));
+
+			if(roleIndex == GameManager.CLIENT_PROJECTOR)
+				roundLabel.setText("Ronde " + (newState.currentRound));
+			else				
+				roundLabel.setText("Ronde " + (newState.currentRound + 1));
 	}
 }

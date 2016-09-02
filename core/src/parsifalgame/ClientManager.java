@@ -9,6 +9,7 @@ import parsifalgame.screens.ClientConnectScreen;
 import parsifalgame.screens.ConfirmScreen;
 import parsifalgame.screens.FacilitatorScreen;
 import parsifalgame.screens.KlingsorScreen;
+import parsifalgame.screens.ProjectorScreen;
 import parsifalgame.screens.TabbedScreen;
 import parsifalgame.screens.UmpireScreen;
 import parsifalgame.screens.WaitScreen;
@@ -32,6 +33,7 @@ public class ClientManager extends GameManager {
 	private ClientConnectScreen connectScreen;
 	private WaitScreen waitScreen;
 	private TabbedScreen tabbedScreen;
+	private ProjectorScreen projectorScreen;
 	private ConfirmScreen confirmScreen;
 
 	private BasicScreen currentScreen;
@@ -66,11 +68,19 @@ public class ClientManager extends GameManager {
 			case CLIENT_UMPIRE:
 				tabbedScreen = new UmpireScreen(uiElements, this);
 				break;
+			case CLIENT_PROJECTOR:
+				tabbedScreen = new ProjectorScreen(uiElements, this);
+				break;
 			default:
 				tabbedScreen = new FacilitatorScreen(uiElements, this);
 			}
 			GameState testState = GameState.randomSimulatedState(8, 8);
-			tabbedScreen.updateGameState(roleIndex, testState);
+			if(roleIndex == CLIENT_PROJECTOR) {
+				((ProjectorScreen)tabbedScreen).updateGameState(roleIndex, testState);
+			}
+			else {
+				tabbedScreen.updateGameState(roleIndex, testState);
+			}
 			setToRoundScreen();
 
 		} else {
@@ -143,6 +153,9 @@ public class ClientManager extends GameManager {
 			break;
 		case GameManager.CLIENT_UMPIRE:
 			tabbedScreen = new UmpireScreen(uiElements, this);
+			break;
+		case GameManager.CLIENT_PROJECTOR:
+			tabbedScreen = new ProjectorScreen(uiElements, this);
 			break;
 		case GameManager.CLIENT_UNDEFINED:
 			throw new RuntimeException(

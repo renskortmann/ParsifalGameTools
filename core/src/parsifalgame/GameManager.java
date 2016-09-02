@@ -24,6 +24,7 @@ public abstract class GameManager extends Game {
 	public static final int CLIENT_UMPIRE = -1;
 	public static final int CLIENT_KLINGSOR = -2;
 	public static final int CLIENT_UNDEFINED = -3;
+	public static final int CLIENT_PROJECTOR = -4;
 	// a team client is any non-negative integer
 
 	public static int facilitatorCount = 8;
@@ -39,6 +40,7 @@ public abstract class GameManager extends Game {
 
 	static {
 
+		putRole(CLIENT_PROJECTOR, "Projector", "[P]", Color.WHITE);
 		putRole(CLIENT_KLINGSOR, "Klingsor", "[K]", Color.WHITE);
 		putRole(CLIENT_UMPIRE, "Umpire", "[U]", Color.WHITE);
 		putRole(CLIENT_UNDEFINED, "undefined", "_u_", Color.WHITE);

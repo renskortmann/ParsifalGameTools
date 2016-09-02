@@ -10,7 +10,8 @@ public abstract class SubScreen {
 	protected final BasicScreen parentScreen;
 	protected final Table mainTable;
 	protected final Skin skin;
-
+	protected int numTeams = 0;
+	
 	protected GameState mostRecentState;
 
 	public SubScreen(BasicScreen parentScreen, Table parentTable) {
@@ -27,6 +28,7 @@ public abstract class SubScreen {
 
 	public void updateGameState(int roleIndex, GameState newState) {
 		mostRecentState = newState;
+		numTeams = newState.numTeams;
 	}
 
 }

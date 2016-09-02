@@ -54,6 +54,7 @@ public class ClientConnectScreen extends BasicScreen {
 
 		// layout
 		TextButton setKlingsorButton = new TextButton("Klingsor", skin, "large");
+		TextButton setProjectorButton = new TextButton("Projector", skin, "large");
 		TextButton setUmpireButton = new TextButton("Umpire", skin, "large");
 		TextButton teamPlusButton = new TextButton("+ Team", skin, "large");
 		TextButton teamMinusButton = new TextButton("- Team", skin, "large");
@@ -61,7 +62,8 @@ public class ClientConnectScreen extends BasicScreen {
 
 		mainTable.add(roleLabel).colspan(4).padBottom(10);
 		mainTable.row();
-		mainTable.add(setKlingsorButton).width(120).padRight(5);
+//		mainTable.add(setKlingsorButton).width(120).padRight(5);
+		mainTable.add(setProjectorButton).width(120).padRight(5);
 		mainTable.add(setUmpireButton).width(120).padRight(5);
 		mainTable.add(teamMinusButton).width(120).padRight(5);
 		mainTable.add(teamPlusButton).width(120);
@@ -102,6 +104,12 @@ public class ClientConnectScreen extends BasicScreen {
 		setKlingsorButton.addListener(new ClickListener() {
 			public void clicked(InputEvent event, float x, float y) {
 				roleIndex = ClientManager.CLIENT_KLINGSOR;
+				setRoleLabel();
+			}
+		});
+		setProjectorButton.addListener(new ClickListener() {
+			public void clicked(InputEvent event, float x, float y) {
+				roleIndex = ClientManager.CLIENT_PROJECTOR;
 				setRoleLabel();
 			}
 		});

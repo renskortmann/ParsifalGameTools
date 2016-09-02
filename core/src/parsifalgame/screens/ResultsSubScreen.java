@@ -48,7 +48,7 @@ public class ResultsSubScreen extends SubScreen {
 	private Label defensesLabel = new Label("", skin, "large");
 	private Label attacksLabel = new Label("", skin, "large");
 	private Label resourcesLabel = new Label("", skin, "large");
-
+	
 	public ResultsSubScreen(BasicScreen parentScreen, Table parentTable) {
 		super(parentScreen, parentTable);
 		teamID = ((ClientManager)parentScreen.gameManager).getRole();
