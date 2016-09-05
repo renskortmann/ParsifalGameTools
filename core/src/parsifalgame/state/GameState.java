@@ -6,6 +6,7 @@ import parsifalgame.simulator.Simulator;
 
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.utils.Array;
+import com.badlogic.gdx.utils.IntArray;
 import com.badlogic.gdx.utils.IntIntMap;
 import com.badlogic.gdx.utils.IntMap;
 
@@ -43,7 +44,6 @@ public class GameState {
 	public boolean gameIsFinished = false;
 	public int currentRound = 0;
 	public int numTeams = 8;
-	
 
 	public long roundTimeLimitMS = (5 * 60 + 30) * 1000;
 
@@ -51,6 +51,7 @@ public class GameState {
 															// attackers, second
 															// array is
 															// defenders
+	
 	public double priceFactor;
 	public double relativePriceChange;
 	

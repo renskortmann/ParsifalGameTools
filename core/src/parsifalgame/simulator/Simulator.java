@@ -23,7 +23,6 @@ public class Simulator {
 	private Array<RoundChoices[]> previousChoices = new Array<RoundChoices[]>();
 
 	public int discovered = 0;
-	public IntArray terrorismTargets = new IntArray();
 	public int earthquakeDamage = 0;
 	private int numTeams;
 	
@@ -51,6 +50,8 @@ public class Simulator {
 
 	private NormalDistribution norma = new NormalDistribution(MEAN_REGENERATE, STDEV_REGENERATE);
 
+	public IntArray terrorismTargets = new IntArray();
+	
 	private class Attacker{
 		public int numZwaarden, numRaketten, numVirussen, attackerID;
 		
@@ -423,11 +424,14 @@ public class Simulator {
 
 		// execute disasters
 		for (int i = 0; i < numTeams; ++i){
-			if (terrorismTargets.contains(i)){
-				nextState.towerHeightAfterLastRound.put(i, 0);
-			}
+//			if (terrorismTargets.contains(i)){
+//				nextState.towerHeightAfterLastRound.put(i, 0);
+//			}
 			if (earthquakeDamage > 0){
-				nextState.towerHeightAfterLastRound.put(i, Math.max(0, nextState.towerHeightAfterLastRound.get(i, -1) - earthquakeDamage));
+				if(terrorismTargets.contains(i))
+					nextState.towerHeightAfterLastRound.put(i, 0);
+				else
+					nextState.towerHeightAfterLastRound.put(i, Math.max(0, nextState.towerHeightAfterLastRound.get(i, -1) - earthquakeDamage));
 			}
 		}
 		
@@ -503,5 +507,24 @@ public class Simulator {
 		settings.outputType = JsonWriter.OutputType.json;
 		
 		ServerManager.writeFile(filename, json.prettyPrint(latestState, settings));
+	}
+
+
+	public void clearTerrorismTargets() {
+		terrorismTargets.clear();
+	}
+
+
+	public void addTerrorismTarget(int target) {
+		terrorismTargets.add(target);
+	}
+
+
+	public GameState getMostRecentStateAfterSabotage() {
+		GameState state = getMostRecentState();
+		for (int i = 0; i < terrorismTargets.size; i++)
+			state.towerHeightAfterLastRound.put(terrorismTargets.get(i), 0);
+			
+		return state;
 	}
 }

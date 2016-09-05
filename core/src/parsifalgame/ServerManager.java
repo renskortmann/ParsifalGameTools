@@ -148,16 +148,16 @@ public class ServerManager extends GameManager {
                 break;
             case RequestEarthquake:
                 int earthquakeDamage = newMessage.getInt();
-                print("Earthquake requested with strength: " + earthquakeDamage);
+                print("Earthquake with strength: " + earthquakeDamage);
                 setEarthquake(earthquakeDamage);
                 break;
             case RequestTerrorism:
                 int target = newMessage.getInt();
                 if (target >= 0)
-                    print("Terrorism requested on " + GameManager.roleNames.get(target));
+                    print("Tower " + GameManager.roleNames.get(target) + " will be sabotaged.");
                 else
-                    print("All terrorism targets cleared");
-                setTerrorism(target);
+                    print("No target chosen for sabotage.");
+                sabotage(target);
                 break;
             default:
                 break;
@@ -202,22 +202,24 @@ public class ServerManager extends GameManager {
             else
                 print("Unable to write to: " + Gdx.files.getLocalStoragePath());
 
-            broadcastGameState(simulator.getMostRecentState());
+            broadcastGameState(simulator.getMostRecentState(), true);
         } else {
             print("Unable to start");
         }
     }
 
-    private void broadcastGameState(GameState state) {
+    private void broadcastGameState(GameState state, boolean writeFile) {
 
         String filename = "state" + state.currentRound + ".json";
 
         JsonValue.PrettyPrintSettings settings = new JsonValue.PrettyPrintSettings();
         settings.outputType = JsonWriter.OutputType.json;
 
-        writeFile(filename, json.prettyPrint(state, settings));
-        print("Round written to file (" + filename + ").");
-
+        if(writeFile) {
+        	writeFile(filename, json.prettyPrint(state, settings));
+        	print("Round written to file (" + filename + ").");
+        }
+        
         Outgoing stateMessage = Message.makeOutgoingState(state, json);
 
         for (ClientWrapper client : mappedClients.values()) {
@@ -310,7 +312,7 @@ public class ServerManager extends GameManager {
                 // simulator.
                 allPeerChoices = new RoundChoices[GameManager.facilitatorCount];
 
-                broadcastGameState(newState);
+                broadcastGameState(newState, true);
 
                 print("State simulation and sending complete. Now starting round " + (
                     newState.currentRound + 1));
@@ -318,7 +320,7 @@ public class ServerManager extends GameManager {
                 GameState recentState = simulator.reSimulate();
 
                 if (recentState != null) {
-                    broadcastGameState(recentState);
+                    broadcastGameState(recentState, true);
 
                     print("Resend complete");
                 }
@@ -441,18 +443,26 @@ public class ServerManager extends GameManager {
             simulator.discovered = num;
     }
 
-    private void setTerrorism(int target) {
+    private void sabotage(int target) {
         if (simulator != null) {
             if (target < 0)
-                simulator.terrorismTargets.clear();
-            else
-                simulator.terrorismTargets.add(target);
+                simulator.clearTerrorismTargets();
+            else {
+                simulator.addTerrorismTarget(target);
+                GameState latestState = simulator.getMostRecentStateAfterSabotage();
+                broadcastGameState(latestState, false);
+            }
         }
     }
 
     private void setEarthquake(int earthquakeDamage) {
-        if (simulator != null)
+        if (simulator != null) {
             simulator.earthquakeDamage = earthquakeDamage;
+            GameState recentState = simulator.reSimulate();
+
+            if (recentState != null)
+                broadcastGameState(recentState, false);
+        }
     }
 
 }

@@ -18,9 +18,11 @@ public class ProjectorScreen extends TabbedScreen {
 	
 	private TextButton shootOutTab = new TextButton("Shoot out", skin, "large");
 	private TextButton towerHeightsTab = new TextButton("Torenhoogtes", skin, "large");
+	private TextButton stockExchangeTab = new TextButton("Beurs", skin, "large");
 
 	public final ShootOutSubScreen shootOutSubScreen = new ShootOutSubScreen(this, centralArea);
 	public final TowerHeightsSubScreen towerHeightsSubScreen = new TowerHeightsSubScreen(this, centralArea);
+	public final StockExchangeSubScreen stockExchangeSubScreen = new StockExchangeSubScreen(this, centralArea);
 
 	@Override
 	public void show() {
@@ -28,6 +30,7 @@ public class ProjectorScreen extends TabbedScreen {
 
 		tabBar.add(shootOutTab).expandX().fill();
 		tabBar.add(towerHeightsTab).expandX().fill();
+		tabBar.add(stockExchangeTab).expandX().fill();
 
 		shootOutTab.addListener(new ClickListener() {
 			@Override
@@ -43,11 +46,19 @@ public class ProjectorScreen extends TabbedScreen {
 			}
 		});
 		
+		stockExchangeTab.addListener(new ClickListener() {
+			@Override
+			public void clicked(InputEvent event, float x, float y) {
+				setToStockExchange();
+			}
+		});
+		
 		setToShootOut();
 	}
 	
 	private void setToShootOut() {
 		towerHeightsTab.setStyle(defaultStyle);
+		stockExchangeTab.setStyle(defaultStyle);
 		shootOutTab.setStyle(selectedStyle);
 		shootOutSubScreen.show();
 		visibleScreen = shootOutSubScreen;
@@ -55,9 +66,18 @@ public class ProjectorScreen extends TabbedScreen {
 
 	private void setToTowerHeights() {
 		shootOutTab.setStyle(defaultStyle);
+		stockExchangeTab.setStyle(defaultStyle);
 		towerHeightsTab.setStyle(selectedStyle);
 		towerHeightsSubScreen.show();
 		visibleScreen = towerHeightsSubScreen;
+	}
+	
+	private void setToStockExchange() {
+		shootOutTab.setStyle(defaultStyle);
+		towerHeightsTab.setStyle(defaultStyle);
+		stockExchangeTab.setStyle(selectedStyle);
+		stockExchangeSubScreen.show();
+		visibleScreen = stockExchangeSubScreen;
 	}
 	
 	@Override

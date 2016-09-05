@@ -219,7 +219,7 @@ public class ResultsSubScreen extends SubScreen {
 			TextButton btn_terrorism = new TextButton("Destroy tower of: ", skin, "large");
 
 			Array<String> names = new Array<String>();
-			names.add("None (clear all)");
+			names.add("Select a target");
 			for(int i = 0; i < numTeams; ++i)
 				names.add(GameManager.roleNames.get(i));
 			sb_terrorism.setItems(names);
